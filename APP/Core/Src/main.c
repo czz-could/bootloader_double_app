@@ -63,7 +63,7 @@ void SystemClock_Config(void);
 
 // ´®¿Ú½ÓÊÕ»º´æ
 #define RX_BUF_SIZE 64
-#define Current_Version "V0.4.0"
+#define Current_Version "V0.7.0"
 uint8_t uart_rx_buf[RX_BUF_SIZE];
 uint16_t uart_rx_cnt = 0;
 uint8_t OTA_FLAG = 0;
@@ -120,10 +120,12 @@ int main(void)
 		if(inter_flash_cfg_get_app_next_running_flash_number() == 1)
 		{
 			SCB->VTOR = USER_APP1_STRAT_ADDR;   // 0x08008000
+			printf("SCB->VTOR:0x%x\r\n",USER_APP1_STRAT_ADDR);
 		}
 		else
 		{
 			SCB->VTOR = USER_APP2_STRAT_ADDR;   // 0x08044000
+			printf("SCB->VTOR:0x%x\r\n",USER_APP2_STRAT_ADDR);
 		}
 		uint8_t Current_run_app = inter_flash_cfg_get_app_running_flash_number();
 		uint8_t next_run_app = inter_flash_cfg_get_app_next_running_flash_number();
