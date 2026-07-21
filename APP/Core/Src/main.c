@@ -63,10 +63,11 @@ void SystemClock_Config(void);
 
 // 串口接收缓存
 #define RX_BUF_SIZE 64
-#define Current_Version "V0.7.0"
+#define Current_Version "V0.1.0"
 uint8_t uart_rx_buf[RX_BUF_SIZE];
 uint16_t uart_rx_cnt = 0;
-uint8_t OTA_FLAG = 0;
+volatile uint8_t OTA_FLAG = 0;
+volatile uint8_t flash_running_number = 0;
 
 void CheckAndSetOTA(void);
 void OTA_CheckCommand(uint8_t *data, uint16_t len);
@@ -150,6 +151,10 @@ int main(void)
 			OTA_FLAG = 0;
 			NVIC_SystemReset(); 
 		}
+		if(flash_running_number == 1)
+		{
+			printf("app%d\r\n",Current_run_app);
+		}
 		printf("Current Version:%s\r\n",Current_Version);			
 		printf("当前运行分区是app%d\r\n",Current_run_app);
 		printf("下一次运行分区是app%d\r\n",next_run_app);
@@ -230,6 +235,20 @@ void OTA_CheckCommand(uint8_t *data, uint16_t len)
         printf("APP：收到升级指令，准备切换升级模式...\r\n");
 				printf("data:%s,len:%d\r\n",data,len);
 				OTA_FLAG = 1;
+    }
+}
+
+// 检查OTA指令
+void flash_running_number_CheckCommand(uint8_t *data, uint16_t len)
+{
+    if (len == 0) return;
+
+    // 收到指令：OTA → 进入升级
+    if (strstr((char *)data, "flash running nember") != NULL)
+    {
+        printf("APP：收到获取正在运行的分区信息\r\n");
+				printf("data:%s,len:%d\r\n",data,len);
+				flash_running_number = 1;
     }
 }
 

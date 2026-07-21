@@ -173,8 +173,8 @@ static void inter_flash_cfg_write_default(void)
     default_param.magic[3] = 0xDD;
     default_param.ota_bin_version = 0;
     default_param.ota_flag = 0;          // 默认不需要升级
-		default_param.ota_running_flash_number = 2; // 默认正在运行app1分区
-		default_param.next_ota_need_flash_number = 2;// 下一次复位要运行的分区
+		default_param.ota_running_flash_number = 1; // 默认正在运行app1分区
+		default_param.next_ota_need_flash_number = 1;// 下一次复位要运行的分区
     default_param.checksum = 0;          // 先清零，稍后计算
     default_param.format[0] = 0;
     default_param.format[1] = 0;

@@ -24,7 +24,7 @@ uint8_t inter_flash_cfg_get_param_sector()
 
     // 计算校验和校验
     uint8_t checksum = inter_flash_checksum((uint8_t *)&flash_cfg_param, sizeof(flash_cfg_param) - 5);
-	printf("checksum:%d\r\n",checksum);
+		printf("checksum:%d\r\n",checksum);
     if(checksum != flash_cfg_param.checksum)
     {
         printf("flash checksum error\r\n");

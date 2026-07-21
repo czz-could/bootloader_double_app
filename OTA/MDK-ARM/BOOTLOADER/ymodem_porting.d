@@ -8,14 +8,14 @@ bootloader\ymodem_porting.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_d
 bootloader\ymodem_porting.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h
 bootloader\ymodem_porting.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xe.h
 bootloader\ymodem_porting.o: ../Drivers/CMSIS/Include/core_cm3.h
-bootloader\ymodem_porting.o: D:\keil5\core\ARM\ARMCC\Bin\..\include\stdint.h
+bootloader\ymodem_porting.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 bootloader\ymodem_porting.o: ../Drivers/CMSIS/Include/cmsis_version.h
 bootloader\ymodem_porting.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 bootloader\ymodem_porting.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
 bootloader\ymodem_porting.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h
 bootloader\ymodem_porting.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h
 bootloader\ymodem_porting.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-bootloader\ymodem_porting.o: D:\keil5\core\ARM\ARMCC\Bin\..\include\stddef.h
+bootloader\ymodem_porting.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 bootloader\ymodem_porting.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc_ex.h
 bootloader\ymodem_porting.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h
 bootloader\ymodem_porting.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio_ex.h
@@ -27,6 +27,6 @@ bootloader\ymodem_porting.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_f
 bootloader\ymodem_porting.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h
 bootloader\ymodem_porting.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h
 bootloader\ymodem_porting.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
-bootloader\ymodem_porting.o: D:\keil5\core\ARM\ARMCC\Bin\..\include\stdio.h
-bootloader\ymodem_porting.o: D:\keil5\core\ARM\ARMCC\Bin\..\include\string.h
+bootloader\ymodem_porting.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+bootloader\ymodem_porting.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 bootloader\ymodem_porting.o: ../Core/Inc/usart.h
