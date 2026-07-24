@@ -1,68 +1,102 @@
 # ===================== MDK-ARM Keil 编译产物 =====================
-# 目标输出文件夹（APP1/APP2/BOOT 所有编译文件）
-MDK-ARM/**/Debug/
-MDK-ARM/**/Release/
-MDK-ARM/**/*.axf
-MDK-ARM/**/*.hex
-MDK-ARM/**/*.bin
-MDK-ARM/**/*.map
-MDK-ARM/**/*.lnp
-MDK-ARM/**/*.htm
-MDK-ARM/**/*.crf
-MDK-ARM/**/*.d
-MDK-ARM/**/*.o
-MDK-ARM/**/*.dep
-MDK-ARM/**/*.build_log.htm
-MDK-ARM/**/*.bak
-MDK-ARM/**/*.sctx
-MDK-ARM/**.#L.*
+# 匹配任意子目录下的 MDK-ARM 文件夹（APP/MDK-ARM、OTA/MDK-ARM 等）
+**/MDK-ARM/**/Debug/
+**/MDK-ARM/**/Release/
+**/MDK-ARM/**/*.axf
+**/MDK-ARM/**/*.hex
+**/MDK-ARM/**/*.bin
+**/MDK-ARM/**/*.map
+**/MDK-ARM/**/*.lnp
+**/MDK-ARM/**/*.htm
+**/MDK-ARM/**/*.crf
+**/MDK-ARM/**/*.d
+**/MDK-ARM/**/*.o
+**/MDK-ARM/**/*.dep
+**/MDK-ARM/**/*.build_log.htm
+**/MDK-ARM/**/*.bak
+**/MDK-ARM/**/*.sctx
+**/MDK-ARM/**/.#L.*
 
-# Keil 临时缓存、窗口布局、用户配置
+# Keil 工程用户配置（窗口布局、个人设置，每人本地不同）
 *.uvgui*
+*.uvguix.*
+*.uvoptx
 *.opt
 *.bak
 *.$$$
 *.sav
-MDK-ARM/*.uvoptx
-MDK-ARM/*.uvguix.*
 
-# ===================== 编译工具/调试文件 =====================
-# J-Link / ST-Link 调试缓存
+# Keil RTE 运行时环境自动生成文件
+**/MDK-ARM/RTE/
+**/MDK-ARM/DebugConfig/
+**/MDK-ARM/firmware/
+
+# ===================== 全局编译/调试中间文件 =====================
 *.elf
 *.out
 *.mem
 *.log
 *.trace
 *.svd
-*.map
+*.i
+*.ii
+*.d
+*.crf
+*.o
+*.obj
+*.axf
+*.elf
 *.hex
 *.bin
+*.map
 
 # ===================== 系统临时文件 =====================
 # Windows
 Thumbs.db
-.DS_Store
+Desktop.ini
 desktop.ini
 *.tmp
 *.temp
 *.swp
 *.swo
 
-# ===================== 第三方工具/OTA相关临时文件 =====================
-# Ymodem、升级工具临时缓存
-upgrade_temp/
-fw_temp/
-*.ota
-*.zip
-*.rar
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
 
-# ===================== 文档、导出文件（按需保留） =====================
-# 注释放开下面会忽略PDF手册、Word/MD笔记，不想忽略就保留#
-# *.pdf
-# *.docx
-# *.md
-
-# ===================== 仿真器、下载器缓存 =====================
+# ===================== 仿真器/下载器缓存 =====================
 JLinkLog.txt
 JLinkSettings.ini
 ST-LINK*.log
+*.jlink
+*.stld
+
+# ===================== OTA/升级工具临时文件 =====================
+upgrade_temp/
+fw_temp/
+*.ota
+*.pack
+
+# 压缩包（通常是编译输出或分发文件，不需要入库）
+*.zip
+*.rar
+*.7z
+
+# ===================== 编辑器/IDE 缓存 =====================
+# VS Code
+.vscode/
+*.code-workspace
+
+# CLion / IAR
+.idea/
+cmake-build-*/
+*.ewd
+*.ewp
+*.eww
+
+# ===================== 文档导出文件（按需保留） =====================
+# 注释放开会忽略PDF手册、Word文档，不想忽略就保留#
+# *.pdf
+# *.docx
+# *.xlsx
