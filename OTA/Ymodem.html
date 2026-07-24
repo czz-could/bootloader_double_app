@@ -65,9 +65,91 @@
 
         #connect { background: #1677FF; }
         #disconnect { background: #FA541C; }
-        #selectFile { background: #27AE60; }
+        #checkPartition { background: #13C2C2; }
+        #selectApp1 { background: #722ED1; }
+        #selectApp2 { background: #EB2F96; }
         #sendOTA { background: #FF9800; }
-        #send { background: #722ED1; }
+        #send { background: #27AE60; }
+
+        .partition-info {
+            background: linear-gradient(135deg, #2D323D, #363B47);
+            padding: 16px 20px;
+            border-radius: 10px;
+            margin-bottom: 18px;
+            border: 1px solid #3B404C;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .partition-status {
+            font-size: 15px;
+        }
+
+        .partition-status span {
+            font-weight: bold;
+            font-size: 18px;
+            margin-left: 8px;
+        }
+
+        .partition-app1 { color: #9254DE; }
+        .partition-app2 { color: #EB2F96; }
+        .partition-unknown { color: #8C8C8C; }
+
+        .firmware-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .firmware-card {
+            background: #2D323D;
+            padding: 16px;
+            border-radius: 10px;
+            border: 1px solid #3B404C;
+        }
+
+        .firmware-card.app1 {
+            border-left: 4px solid #722ED1;
+        }
+
+        .firmware-card.app2 {
+            border-left: 4px solid #EB2F96;
+        }
+
+        .firmware-card h4 {
+            margin-bottom: 10px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .firmware-card.app1 h4 { color: #9254DE; }
+        .firmware-card.app2 h4 { color: #EB2F96; }
+
+        .firmware-card .file-info {
+            font-size: 12px;
+            color: #8C8C8C;
+            line-height: 1.6;
+            word-break: break-all;
+        }
+
+        .firmware-card .file-info .name {
+            color: #E5E7EB;
+            font-weight: 500;
+        }
+
+        .target-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            background: #FF9800;
+            color: #fff;
+            margin-left: auto;
+        }
 
         .info {
             background: #2D323D;
@@ -107,7 +189,7 @@
             background: #121418;
             color: #EAEAEA;
             padding: 16px;
-            height: 460px;
+            height: 400px;
             overflow-y: auto;
             border-radius: 10px;
             font-family: Consolas, "Courier New", monospace;
@@ -125,27 +207,62 @@
 
 <body>
 <div class="container">
-    <h2>⚙️ Ymodem 串口固件升级工具</h2>
+    <h2>⚙️ Ymodem 串口固件升级工具（双分区版）</h2>
 
     <div class="controls">
         <button id="connect">连接串口</button>
         <button id="disconnect" disabled>断开串口</button>
-        <button id="selectFile">选择 bin 文件</button>
+        <button id="checkPartition" disabled>检测运行分区</button>
         <button id="sendOTA" disabled>进入OTA升级模式</button>
         <button id="send" disabled>开始升级</button>
     </div>
 
+    <!-- 当前运行分区状态 -->
+    <div class="partition-info">
+        <div class="partition-status">
+            当前运行分区：
+            <span id="currentPartition" class="partition-unknown">未检测</span>
+        </div>
+        <div style="font-size: 12px; color: #8C8C8C;">
+            升级目标分区：<span id="targetPartition" style="color: #FF9800; font-weight: bold;">-</span>
+        </div>
+    </div>
+
+    <!-- 双固件选择区域 -->
+    <div class="firmware-section">
+        <div class="firmware-card app1">
+            <h4>
+                📦 APP1 固件
+                <span id="targetBadge1" class="target-badge" style="display:none;">升级目标</span>
+            </h4>
+            <button id="selectApp1" style="padding: 6px 14px; font-size: 12px; margin-bottom: 10px;">选择 APP1.bin</button>
+            <div class="file-info">
+                文件名：<span id="app1Name" class="name">未选择</span><br>
+                文件大小：<span id="app1Size">0 B</span>
+            </div>
+        </div>
+        <div class="firmware-card app2">
+            <h4>
+                📦 APP2 固件
+                <span id="targetBadge2" class="target-badge" style="display:none;">升级目标</span>
+            </h4>
+            <button id="selectApp2" style="padding: 6px 14px; font-size: 12px; margin-bottom: 10px;">选择 APP2.bin</button>
+            <div class="file-info">
+                文件名：<span id="app2Name" class="name">未选择</span><br>
+                文件大小：<span id="app2Size">0 B</span>
+            </div>
+        </div>
+    </div>
+
     <div class="info">
-        连接状态：<span id="status" style="color:#ff4d4f">未连接</span><br>
-        当前文件：<span id="fname">未选择</span><br>
-        文件大小：<span id="fsize">0</span>
+        连接状态：<span id="status" style="color:#ff4d4f">未连接</span>
     </div>
 
     <div class="progress-bar">
         <div id="progress" class="progress">0%</div>
     </div>
 
-    <div id="log">[系统] 工具已启动 · 过滤调试打印 · 仅识别 ACK(0x06)
+    <div id="log">[系统] 工具已启动 · 双分区OTA升级模式
 --------------------------------------------------------
 </div>
 </div>
@@ -160,14 +277,23 @@ const C_CHAR    = 0x43;
 
 const connectBtn    = document.getElementById('connect');
 const disconnectBtn = document.getElementById('disconnect');
-const selectFileBtn = document.getElementById('selectFile');
+const checkPartBtn  = document.getElementById('checkPartition');
+const selectApp1Btn = document.getElementById('selectApp1');
+const selectApp2Btn = document.getElementById('selectApp2');
 const sendOTABtn    = document.getElementById('sendOTA');
 const sendBtn       = document.getElementById('send');
 const statusSpan    = document.getElementById('status');
-const fnameSpan     = document.getElementById('fname');
-const fsizeSpan     = document.getElementById('fsize');
 const progressDiv   = document.getElementById('progress');
 const logDiv        = document.getElementById('log');
+
+const currentPartSpan = document.getElementById('currentPartition');
+const targetPartSpan  = document.getElementById('targetPartition');
+const targetBadge1    = document.getElementById('targetBadge1');
+const targetBadge2    = document.getElementById('targetBadge2');
+const app1NameSpan    = document.getElementById('app1Name');
+const app1SizeSpan    = document.getElementById('app1Size');
+const app2NameSpan    = document.getElementById('app2Name');
+const app2SizeSpan    = document.getElementById('app2Size');
 
 let port = null;
 let writer = null;
@@ -177,9 +303,12 @@ let rxBuffer = [];
 let receiveLine = "";
 let isDisconnected = false;
 
-let fileData   = null;
-let fileName   = "";
-let fileSize   = 0;
+// 双固件数据
+let app1Data = null, app1Name = "", app1Size = 0;
+let app2Data = null, app2Name = "", app2Size = 0;
+
+// 当前运行分区：null / "APP1" / "APP2"
+let currentPartition = null;
 
 function log(msg) {
     if (isDisconnected) return;
@@ -275,11 +404,142 @@ async function waitOTAReceived(timeout = 1000) {
     return false;
 }
 
+// ========== 检测运行分区 ==========
+async function waitPartitionReply(timeout = 2000) {
+    const end = Date.now() + timeout;
+    let buffer = "";
+    while (Date.now() < end) {
+        if (isDisconnected) return null;
+        while (rxBuffer.length > 0) {
+            const c = String.fromCharCode(rxBuffer.shift());
+            buffer += c;
+            // 匹配 APP1 或 APP2 回复
+            if (buffer.includes("APP1")) return "APP1";
+            if (buffer.includes("APP2")) return "APP2";
+        }
+        await new Promise(r => setTimeout(r, 1));
+    }
+    return null;
+}
+
+function updatePartitionUI() {
+    if (currentPartition === "APP1") {
+        currentPartSpan.textContent = "APP1";
+        currentPartSpan.className = "partition-app1";
+        targetPartSpan.textContent = "APP2";
+        targetBadge1.style.display = "none";
+        targetBadge2.style.display = "inline-block";
+    } else if (currentPartition === "APP2") {
+        currentPartSpan.textContent = "APP2";
+        currentPartSpan.className = "partition-app2";
+        targetPartSpan.textContent = "APP1";
+        targetBadge1.style.display = "inline-block";
+        targetBadge2.style.display = "none";
+    } else {
+        currentPartSpan.textContent = "未检测";
+        currentPartSpan.className = "partition-unknown";
+        targetPartSpan.textContent = "-";
+        targetBadge1.style.display = "none";
+        targetBadge2.style.display = "none";
+    }
+    updateSendButtonState();
+}
+
+function updateSendButtonState() {
+    // 必须检测了分区，并且对应目标分区的固件已选择
+    if (!currentPartition) {
+        sendBtn.disabled = true;
+        return;
+    }
+    const targetData = currentPartition === "APP1" ? app2Data : app1Data;
+    sendBtn.disabled = !targetData;
+}
+
+async function checkPartition() {
+    try {
+        checkPartBtn.disabled = true;
+        log("📤 下发 running flash 指令，检测当前运行分区...");
+        rxBuffer = [];
+
+        await writer.write(new TextEncoder().encode("running flash\r\n"));
+
+        const result = await waitPartitionReply(2000);
+        if (!result) {
+            log("❌ 检测失败：2秒内未收到分区回复");
+            checkPartBtn.disabled = false;
+            return;
+        }
+
+        currentPartition = result;
+        log(`✅ 检测成功，当前运行分区：${result}`);
+        updatePartitionUI();
+
+        // 提示目标分区固件状态
+        const targetName = result === "APP1" ? "APP2" : "APP1";
+        const targetLoaded = result === "APP1" ? app2Data : app1Data;
+        if (targetLoaded) {
+            log(`💡 将使用 ${targetName} 固件进行升级（已加载）`);
+        } else {
+            log(`⚠️  请先选择 ${targetName} 固件后再升级`);
+        }
+
+        checkPartBtn.disabled = false;
+    } catch (e) {
+        log("❌ 检测分区指令发送失败");
+        checkPartBtn.disabled = false;
+    }
+}
+
+// ========== 双固件选择 ==========
+function selectApp1File() {
+    const i = document.createElement('input'); i.type='file'; i.accept='.bin';
+    i.onchange = async e => {
+        const f = e.target.files[0];
+        app1Name = f.name; app1Size = f.size;
+        app1Data = new Uint8Array(await f.arrayBuffer());
+        app1NameSpan.textContent = app1Name;
+        app1SizeSpan.textContent = app1Size + " B";
+        log(`📁 已加载 APP1 固件：${app1Name} (${app1Size} B)`);
+        updateSendButtonState();
+    };
+    i.click();
+}
+
+function selectApp2File() {
+    const i = document.createElement('input'); i.type='file'; i.accept='.bin';
+    i.onchange = async e => {
+        const f = e.target.files[0];
+        app2Name = f.name; app2Size = f.size;
+        app2Data = new Uint8Array(await f.arrayBuffer());
+        app2NameSpan.textContent = app2Name;
+        app2SizeSpan.textContent = app2Size + " B";
+        log(`📁 已加载 APP2 固件：${app2Name} (${app2Size} B)`);
+        updateSendButtonState();
+    };
+    i.click();
+}
+
+// ========== OTA 升级 ==========
 async function sendOTACommand() {
     try {
+        if (!currentPartition) {
+            log("⚠️  请先点击「检测运行分区」确定当前分区");
+            return;
+        }
+
+        // 检查目标分区固件是否存在
+        const isApp1Running = currentPartition === "APP1";
+        const targetData = isApp1Running ? app2Data : app1Data;
+        const targetName = isApp1Running ? app2Name : app1Name;
+
+        if (!targetData) {
+            log(`❌ 请先选择 ${isApp1Running ? "APP2" : "APP1"} 固件`);
+            return;
+        }
+
         log("📤 发送 OTA 指令，等待应答...");
         rxBuffer = [];
-        
+
         await writer.write(new TextEncoder().encode("OTA\r\n"));
 
         const ok = await waitOTAReceived(1000);
@@ -289,10 +549,10 @@ async function sendOTACommand() {
             return;
         }
 
-        log("✅ 已收到 OTA Received，准备开始升级");
+        log(`✅ 已收到 OTA Received，使用 ${isApp1Running ? "APP2" : "APP1"} 固件开始升级`);
         sendOTABtn.disabled = true;
         await new Promise(r => setTimeout(r, 200));
-        startSend();
+        startSend(targetData, targetName);
     } catch (e) {
         log("❌ 发送OTA指令失败");
         sendOTABtn.disabled = false;
@@ -312,6 +572,7 @@ async function connect() {
         statusSpan.textContent = "已连接"; statusSpan.style.color = "#00C48C";
         connectBtn.disabled = true;
         disconnectBtn.disabled = false;
+        checkPartBtn.disabled = false;
         sendOTABtn.disabled = false;
     } catch (e) { log("❌ 连接失败"); }
 }
@@ -353,24 +614,13 @@ async function disconnect() {
     statusSpan.textContent = "未连接"; statusSpan.style.color = "#ff4d4f";
     connectBtn.disabled = false;
     disconnectBtn.disabled = true;
+    checkPartBtn.disabled = true;
     sendOTABtn.disabled = true;
     sendBtn.disabled = true;
 }
 
-function selectFile() {
-    const i = document.createElement('input'); i.type='file'; i.accept='.bin';
-    i.onchange = async e => {
-        const f = e.target.files[0];
-        fileName = f.name; fileSize = f.size;
-        fileData = new Uint8Array(await f.arrayBuffer());
-        fnameSpan.textContent = fileName; fsizeSpan.textContent = fileSize + " B";
-        log(`📁 已选文件：${fileName} (${fileSize} B)`);
-        sendBtn.disabled = false;
-    };
-    i.click();
-}
-
-async function startSend() {
+async function startSend(fileData, fileName) {
+    const fileSize = fileData.length;
     sendBtn.disabled = true;
     sendOTABtn.disabled = true;
     if (isDisconnected) {
@@ -404,7 +654,7 @@ async function startSend() {
     await writer.write(namePkt);
 
     log("✅ 文件名包发送，等待单片机擦除Flash（请勿断开）...");
-    
+
     if(await waitTargetByte(ACK, 20000) === null) {
         log("❌ 升级失败：文件头包应答超时");
         sendBtn.disabled = false;
@@ -438,20 +688,19 @@ async function startSend() {
         pkt[132]=crc&0xFF;
 
         await writer.write(pkt);
-        
+
         if(await waitTargetByte(ACK, 5000) === null) {
             log(`❌ 升级失败：第 ${seq} 包发送失败`);
             sendBtn.disabled = false;
             sendOTABtn.disabled = false;
             return;
         }
-        
+
         log(`📤 第${seq}包 确认成功 ${offset+128}/${total}`);
 
         offset +=128;
         seq++;
-        
-        // 修复进度条，限制最大值为 100%
+
         const percent = Math.min(100, Math.floor(offset / total * 100));
         progressDiv.style.width = percent + "%";
         progressDiv.innerText = percent + "%";
@@ -476,19 +725,24 @@ async function startSend() {
     await waitTargetByte(ACK, 5000);
 
     log("🎉 升级成功！设备即将重启");
-    
+
     progressDiv.style.width = "100%";
     progressDiv.innerText = "100%";
-    
+
     sendBtn.disabled = false;
     sendOTABtn.disabled = false;
 }
 
 connectBtn.addEventListener('click', connect);
 disconnectBtn.addEventListener('click', disconnect);
-selectFileBtn.addEventListener('click', selectFile);
+checkPartBtn.addEventListener('click', checkPartition);
+selectApp1Btn.addEventListener('click', selectApp1File);
+selectApp2Btn.addEventListener('click', selectApp2File);
 sendOTABtn.addEventListener('click', sendOTACommand);
-sendBtn.addEventListener('click', startSend);
+sendBtn.addEventListener('click', () => {
+    // 直接点击开始升级时，也走OTA指令流程
+    sendOTACommand();
+});
 </script>
 </body>
 </html>
